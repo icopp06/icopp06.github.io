@@ -1,16 +1,16 @@
-<!DOCTYPE html>
 <html>
 <head>
   <title>Basic Web Page</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" >
-
-
- </head>
+  
+</head>
 <body>
   <h1>Project One</h1>
 
   <h3>About me </h3>
     <p> My name is Isabelle and I am from Oregon. I am currently a student attending Gonzaga university. I am working on getting my four year degree for nursing. I have lived in Oregon my whole life but was drawn to Gonzaga because it was in Washington and a good distance from home but also for the nursing program and community.</p>
+
+    
 
     <h3>Interests</h3>
       <ul>
@@ -26,17 +26,73 @@
         <p>This summer I travelled around Portugal and Spain for three weeks. I started in Lisbon, Portugal and ended in Seville, Spain. We took trains around the algarve coast of Portugal for two weeks and then spent some time in Spain for a week. We went to multiple cities and towns like Lagos, Tavira and Cordoba. I went with my bestfriend and both of our moms. In Spain I met two italian girls and became really good friends with one of them and hope to visit her in Genoa sometime in summer. My dad is British so we go to Europe periodically and visit them. Last year we went to Greece and stayed at islands and then flew to go and visit my family in England after. I also go to Mexico a lot beacuse my family has a house in Cabo San Lucas. It is one of my favorite places and I have many memories there. I am excited to go and ski in Canada this summer because British Columbia is beautiful and I have always wanted to ski there. Last winter I went with my friend and skiied at Mammoth in California and the snow was amazing.  <p>
 
         <img src= "https://www.followmeaway.com/wp-content/uploads/2024/04/best-beach-towns-in-Europe-Positano1.jpg" width = "300" />
+        <div>Teachable Machine Image Model</div>
+        <p> Right now, Maddie and I are working on creating a trainable AI using two stuffed animals and having it differenciate between the two. I will include a link below and some test photos so that you can test it out for yourself. <p>
+          
+<button type="button" onclick="init()">Start</button>
+<div id="webcam-container"></div>
+<div id="label-container"></div>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+<script type="text/javascript">
+    // More API functions here:
+    // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/image
 
-  <h3>Current Project</h3>
-  <p>Right now, Maddie and I are working on creating a trainable AI using two stuffed animals and having it differenciate between the two. I will include a link below and some test photos so that you can test it out for yourself.</p>
-  <a href ="https://teachablemachine.withgoogle.com/models/KCN1HxIbO/"
-    target= "_blank"> <h4>Our AI Model<h4></a>
+    // the link to your model provided by Teachable Machine export panel
+    const URL = "https://teachablemachine.withgoogle.com/models/KnV-x66Cr/";
 
+    let model, webcam, labelContainer, maxPredictions;
+
+    // Load the image model and setup the webcam
+    async function init() {
+        const modelURL = URL + "model.json";
+        const metadataURL = URL + "metadata.json";
+
+        // load the model and metadata
+        // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
+        // or files from your local hard drive
+        // Note: the pose library adds "tmImage" object to your window (window.tmImage)
+        model = await tmImage.load(modelURL, metadataURL);
+        maxPredictions = model.getTotalClasses();
+
+        // Convenience function to setup a webcam
+        const flip = true; // whether to flip the webcam
+        webcam = new tmImage.Webcam(200, 200, flip); // width, height, flip
+        await webcam.setup(); // request access to the webcam
+        await webcam.play();
+        window.requestAnimationFrame(loop);
+
+        // append elements to the DOM
+        document.getElementById("webcam-container").appendChild(webcam.canvas);
+        labelContainer = document.getElementById("label-container");
+        for (let i = 0; i < maxPredictions; i++) { // and class labels
+            labelContainer.appendChild(document.createElement("div"));
+        }
+    }
+
+    async function loop() {
+        webcam.update(); // update the webcam frame
+        await predict();
+        window.requestAnimationFrame(loop);
+    }
+
+    // run the webcam image through the image model
+    async function predict() {
+        // predict can take in an image, video or canvas html element
+        const prediction = await model.predict(webcam.canvas);
+        for (let i = 0; i < maxPredictions; i++) {
+            const classPrediction =
+                prediction[i].className + ": " + prediction[i].probability.toFixed(2);
+            labelContainer.childNodes[i].innerHTML = classPrediction;
+        }
+    }
+</script>
+
+  
   <h3> Experience</h3>
     <p>For the past five summers, I have travelled to Montana in the summer and spend a few weeks working on a ranch. I stay on the ranch and work all day caring for the ranch and animals. I do chores, clean, work the animals, and even clean the house I stay at. Last year I volunteered in the hospital ICU in my town. I went twice a week for two or three hours. I checked people into the ICU and assisted people into the ICU. I also volunteer at a local hospice where I care and form relationships with patients during the end of life. A lot of  people dont feel comfortable around death but I think it is important to make a difference in someones life.<p>
 
-    <a href= "https://www.instagram.com/rollo_ranch/" target= "_blank"> <h4>Rollo Ranch<h4></a>
-
+    <a href= "https://www.instagram.com/rollo_ranch/" target= "_blank"> <h4>Rollo Ranch</h4></a>
 
     <h3>Skills</h3>
      <ol>
@@ -54,4 +110,3 @@
 
 </body>
 </html>
-
